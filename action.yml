@@ -25,10 +25,12 @@ runs:
   using: composite
   steps:
     - name: Build image
+      shell: bash
       run: |
         docker build -t isogenerator:local -f Dockerfile .
 
     - name: Download image
+      shell: bash
       run: |
         docker run --rm --privileged \
           --volume .:/isogenerator/output \
