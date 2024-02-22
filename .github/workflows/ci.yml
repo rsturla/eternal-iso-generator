@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         web-installer: [true, false]
-        installer-version: [38, 39]
+        installer-version: [39]
     env:
       FEDORA_VERSION: 39
     steps:
