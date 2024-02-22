@@ -22,14 +22,20 @@ inputs:
     default: false
 
 runs:
-  using: docker
-  image: 'Dockerfile'
-  args:
-    - make
-    - output/${{ inputs.image-name }}-${{ inputs.image-tag}}.iso
-    - ARCH=${{ inputs.arch }}
-    - VERSION=${{ inputs.version }}
-    - IMAGE_REPO=${{ inputs.image-repo }}
-    - IMAGE_NAME=${{ inputs.image-name }}
-    - IMAGE_TAG=${{ inputs.image-tag }}
-    - USE_WEB_INSTALLER=${{ inputs.use-web-installer }}
+  using: composite
+  steps:
+    - name: Build image
+      run: |
+        docker build -t isogenerator:local -f Dockerfile .
+
+    - name: Download image
+      run: |
+        docker run --rm --privileged \
+          --volume .:/isogenerator/output \
+          isogenerator:local \
+          'sh -c make container/${{ inputs.image-name }}-${{ inputs.image-tag }} \
+            ARCH=${{ inputs.arch }} \
+            VERSION=${{ inputs.version }} \
+            IMAGE_REPO=${{ inputs.image-repo }} \
+            IMAGE_TAG=${{ inputs.image-tag }} \
+            USE_WEB_INSTALLER=${{ inputs.use-web-installer }}'
