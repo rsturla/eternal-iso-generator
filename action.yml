@@ -23,7 +23,7 @@ inputs:
 
 runs:
   using: docker
-  image: Containerfile
+  image: 'Dockerfile'
   args:
     - -e ARCH=${{ inputs.arch }}
     - -e IMAGE_NAME=${{ inputs.image-name }}
