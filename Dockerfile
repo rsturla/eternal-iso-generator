@@ -12,5 +12,3 @@ RUN dnf install -y make && \
   dnf clean all
 
 VOLUME /isogenerator/output
-
-ENTRYPOINT [ "sh -c" ]
