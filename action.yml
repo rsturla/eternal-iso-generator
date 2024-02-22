@@ -25,9 +25,5 @@ runs:
   using: docker
   image: 'Dockerfile'
   args:
-    - -e ARCH=${{ inputs.arch }}
-    - -e IMAGE_NAME=${{ inputs.image-name }}
-    - -e VERSION=${{ inputs.version }}
-    - -e IMAGE_REPO=${{ inputs.image-repo }}
-    - -e IMAGE_TAG=${{ inputs.image-tag }}
-    - -e USE_WEB_INSTALLER=${{ inputs.use-web-installer }}
+    - sh -c
+    - make output/${{ inputs.image-name }}-${{ inputs.image-tag}}.iso ARCH=${{ inputs.arch }} VERSION=${{ inputs.version }} IMAGE_REPO=${{ inputs.image-repo }} IMAGE_NAME=${{ inputs.image-name }} IMAGE_TAG=${{ inputs.image-tag }} USE_WEB_INSTALLER=${{ inputs.use-web-installer }}'
