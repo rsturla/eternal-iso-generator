@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        web-installer: [true, false]
+        installer-version: [38, 39]
+    env:
+      FEDORA_VERSION: 39
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Action
+        uses: ./
+        with:
+          image-name: lumina
+          image-repo: ghcr.io/rsturla/eternal-linux
+          image-tag: ${{ env.FEDORA_VERSION }}
+          use-web-installer: ${{ matrix.web-installer }}
+          version: ${{ matrix.installer-version }}
+          arch: x86_64
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eternal-linux-${{ matrix.installer-version }}-${{ matrix.web-installer && 'web' || 'legacy' }}
+          path: lumina-${{ env.FEDORA_VERSION }}.iso
+          retention-days: 3
