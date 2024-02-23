@@ -1,4 +1,4 @@
-name: CI
+name: ISO Generator CI
 
 on:
   push:
