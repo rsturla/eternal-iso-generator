@@ -31,14 +31,15 @@ runs:
 
     - name: Download image
       shell: bash
+      env:
+        IMAGE_NAME: ${{ inputs.image-name }}
+        IMAGE_TAG: ${{ inputs.image-tag }}
+        IMAGE_REPO: ${{ inputs.image-repo }}
+        ARCH: ${{ inputs.arch }}
+        VERSION: ${{ inputs.version }}
+        USE_WEB_INSTALLER: ${{ inputs.use-web-installer }}
       run: |
         docker run --rm --privileged \
           --volume .:/isogenerator/output \
-          -e IMAGE_NAME="${{ inputs.image-name }}" \
-          -e IMAGE_TAG="${{ inputs.image-tag }}" \
-          -e ARCH="${{ inputs.arch }}" \
-          -e VERSION="${{ inputs.version }}" \
-          -e IMAGE_REPO="${{ inputs.image-repo }}" \
-          -e USE_WEB_INSTALLER="${{ inputs.use-web-installer }}" \
           isogenerator:local \
           bash -c 'make container/"$IMAGE_NAME"-"$IMAGE_TAG" ARCH="$ARCH" VERSION="$VERSION" IMAGE_REPO="$IMAGE_REPO" IMAGE_TAG="$IMAGE_TAG" USE_WEB_INSTALLER="$USE_WEB_INSTALLER"'
