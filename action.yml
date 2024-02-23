@@ -35,9 +35,4 @@ runs:
         docker run --rm --privileged \
           --volume .:/isogenerator/output \
           isogenerator:local \
-          'make container/${{ inputs.image-name }}-${{ inputs.image-tag }} \
-            ARCH=${{ inputs.arch }} \
-            VERSION=${{ inputs.version }} \
-            IMAGE_REPO=${{ inputs.image-repo }} \
-            IMAGE_TAG=${{ inputs.image-tag }} \
-            USE_WEB_INSTALLER=${{ inputs.use-web-installer }}'
+          'make'
