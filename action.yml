@@ -96,9 +96,3 @@ runs:
             USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
         mkdir output
         mv ${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso output/
-
-    - name: Upload ISO
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ inputs.image-name }}-${{ inputs.image-tag }}-${{ inputs.arch }}${{ inputs.use-web-installer && '' || '-legacy'}}-iso
-        path: output/*.iso
