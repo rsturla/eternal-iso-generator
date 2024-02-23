@@ -42,4 +42,4 @@ runs:
         docker run --rm --privileged \
           --volume .:/isogenerator/output \
           isogenerator:local \
-          bash -c 'make container/"$IMAGE_NAME"-"$IMAGE_TAG" ARCH="$ARCH" VERSION="$VERSION" IMAGE_REPO="$IMAGE_REPO" IMAGE_TAG="$IMAGE_TAG" USE_WEB_INSTALLER="$USE_WEB_INSTALLER"'
+          bash -c 'make container/"$IMAGE_NAME"-"$IMAGE_TAG" IMAGE_NAME="$IMAGE_NAME" IMAGE_REPO="$IMAGE_REPO" IMAGE_TAG="$IMAGE_TAG"'
