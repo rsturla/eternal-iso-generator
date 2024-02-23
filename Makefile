@@ -2,8 +2,8 @@
 ## Formatting = UPPERCASE
 ARCH=x86_64
 VERSION=39
-IMAGE_REPO=""
-IMAGE_NAME=""
+IMAGE_REPO="ghcr.io/rsturla/eternal-linux"
+IMAGE_NAME="lumina"
 IMAGE_TAG=$(VERSION)
 VARIANT=desktop
 USE_WEB_INSTALLER=false
@@ -41,7 +41,7 @@ lorax_templates/%.tmpl: lorax_templates/%.tmpl.in
 
 	sed 's/@IMAGE_TAG@/$(IMAGE_TAG)/'                          $(_BASE_DIR)/lorax_templates/$*.tmpl > $(_BASE_DIR)/lorax_templates/$*.tmpl.tmp
 	mv $(_BASE_DIR)/lorax_templates/$*.tmpl{.tmp,}
-	
+
 	sed 's/@IMAGE_REPO_ESCAPED@/$(_IMAGE_REPO_DOUBLE_ESCAPED)/' $(_BASE_DIR)/lorax_templates/$*.tmpl > $(_BASE_DIR)/lorax_templates/$*.tmpl.tmp
 	mv $(_BASE_DIR)/lorax_templates/$*.tmpl{.tmp,}
 
@@ -95,5 +95,5 @@ clean:
 	rm -f $(_BASE_DIR)/lorax.conf || true
 	rm -f $(_BASE_DIR)/*.iso || true
 	rm -f $(_BASE_DIR)/*.log || true
-	
+
 .PHONY: clean
