@@ -35,7 +35,7 @@ runs:
         docker run --rm --privileged \
           --volume .:/isogenerator/output \
           isogenerator:local \
-          'sh -c make container/${{ inputs.image-name }}-${{ inputs.image-tag }} \
+          'make container/${{ inputs.image-name }}-${{ inputs.image-tag }} \
             ARCH=${{ inputs.arch }} \
             VERSION=${{ inputs.version }} \
             IMAGE_REPO=${{ inputs.image-repo }} \
