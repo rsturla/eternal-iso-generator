@@ -87,12 +87,10 @@ runs:
           --volume .:/isogenerator/output \
           -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
           isogenerator:local \
-          bash -c 'make ${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso \
+          bash -c 'make output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso \
             ARCH=${ARCH} \
             VERSION=${VERSION} \
             IMAGE_NAME=${IMAGE_NAME} \
             IMAGE_REPO=${IMAGE_REPO} \
             IMAGE_TAG=${IMAGE_TAG} \
             USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
-        mkdir output
-        mv ${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso output/

@@ -23,11 +23,6 @@ ifeq ($(USE_WEB_INSTALLER),true)
   _LORAX_ARGS += -i anaconda-webui
 endif
 
-# Step 7: Move end ISO to root
-## Default action
-$(IMAGE_NAME)-$(IMAGE_TAG)-$(ARCH).iso: output/$(IMAGE_NAME)-$(IMAGE_TAG)-$(ARCH).iso
-	mv output/$(IMAGE_NAME)-$(IMAGE_TAG)-$(ARCH).iso $(IMAGE_NAME)-$(IMAGE_TAG)-$(ARCH).iso
-
 # Step 6: Build end ISO file
 output/$(IMAGE_NAME)-$(IMAGE_TAG)-$(ARCH).iso: boot.iso container/$(IMAGE_NAME)-$(IMAGE_TAG) xorriso/input.txt
 	mkdir -p $(_BASE_DIR)/output
