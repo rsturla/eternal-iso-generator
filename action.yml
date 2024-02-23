@@ -94,3 +94,5 @@ runs:
             IMAGE_REPO=${IMAGE_REPO} \
             IMAGE_TAG=${IMAGE_TAG} \
             USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
+        ls -la output
+        ls -la
