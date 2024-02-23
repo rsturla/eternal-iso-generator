@@ -87,7 +87,7 @@ runs:
           --volume .:/isogenerator/output \
           -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
           isogenerator:local \
-          bash -c 'make ${IMAGE_NAME}-${IMAGE_TAG}.iso \
+          bash -c 'make ${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso \
             ARCH=${ARCH} \
             VERSION=${VERSION} \
             IMAGE_NAME=${IMAGE_NAME} \
@@ -95,10 +95,10 @@ runs:
             IMAGE_TAG=${IMAGE_TAG} \
             USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
         mkdir output
-        mv ${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}-${VERSION}.iso output/
+        mv ${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso output/
 
     - name: Upload ISO
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.image-name }}-${{ inputs.image-tag }}-${{ inputs.arch }}-${{ inputs.version }}-iso
+        name: ${{ inputs.image-name }}-${{ inputs.image-tag }}-${{ inputs.arch }}-${{ inputs.use-web-installer && 'web' || 'legacy'}}-iso
         path: output/*.iso
