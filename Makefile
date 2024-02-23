@@ -1,28 +1,26 @@
 # Configuration vars
-## Formatting = UPPERCASE
-ARCH=x86_64
-VERSION=39
-IMAGE_REPO="ghcr.io/rsturla/eternal-linux"
-IMAGE_NAME="lumina"
-IMAGE_TAG=$(VERSION)
-VARIANT=desktop
-USE_WEB_INSTALLER=false
+ARCH := x86_64
+VERSION := 39
+IMAGE_REPO := ghcr.io/rsturla/eternal-linux
+IMAGE_NAME := lumina
+IMAGE_TAG := $(VERSION)
+VARIANT := desktop
+USE_WEB_INSTALLER := false
 
 # Generated vars
-## Formatting = _UPPERCASE
-_BASE_DIR = $(shell pwd)
-_IMAGE_REPO_ESCAPED = $(subst /,\/,$(IMAGE_REPO))
-_IMAGE_REPO_DOUBLE_ESCAPED = $(subst \,\\\,$(_IMAGE_REPO_ESCAPED))
-_VOLID = $(firstword $(subst -, ,$(IMAGE_NAME)))-$(ARCH)-$(IMAGE_TAG)
+_BASE_DIR := $(shell pwd)
+_IMAGE_REPO_ESCAPED := $(subst /,\/,$(IMAGE_REPO))
+_IMAGE_REPO_DOUBLE_ESCAPED := $(subst \,\\\,$(_IMAGE_REPO_ESCAPED))
+_VOLID := $(firstword $(subst -, ,$(IMAGE_NAME)))-$(ARCH)-$(IMAGE_TAG)
 
-ifeq ($(VARIANT),'server')
-_LORAX_ARGS = --macboot --noupgrade
+ifeq ($(VARIANT),server)
+  _LORAX_ARGS := --macboot --noupgrade
 else
-_LORAX_ARGS = --nomacboot
+  _LORAX_ARGS := --nomacboot
 endif
 
 ifeq ($(USE_WEB_INSTALLER),true)
-_LORAX_ARGS += -i anaconda-webui
+  _LORAX_ARGS += -i anaconda-webui
 endif
 
 # Step 7: Move end ISO to root
@@ -32,7 +30,7 @@ $(IMAGE_NAME)-$(IMAGE_TAG)-$(ARCH).iso: output/$(IMAGE_NAME)-$(IMAGE_TAG)-$(ARCH
 
 # Step 6: Build end ISO file
 output/$(IMAGE_NAME)-$(IMAGE_TAG)-$(ARCH).iso: boot.iso container/$(IMAGE_NAME)-$(IMAGE_TAG) xorriso/input.txt
-	mkdir $(_BASE_DIR)/output || true
+	mkdir -p $(_BASE_DIR)/output
 	xorriso -dialog on < $(_BASE_DIR)/xorriso/input.txt
 
 # Step 1: Generate Lorax Templates
@@ -47,20 +45,20 @@ lorax_templates/%.tmpl: lorax_templates/%.tmpl.in
 
 # Step 2: Build boot.iso using Lorax
 boot.iso: lorax_templates/set_installer.tmpl lorax_templates/configure_upgrades.tmpl
-	rm -Rf $(_BASE_DIR)/results
+	rm -rf $(_BASE_DIR)/results
 	lorax -p $(IMAGE_NAME) -v $(VERSION) -r $(VERSION) -t $(VARIANT) \
           --isfinal --buildarch=$(ARCH) --volid=$(_VOLID) \
           $(_LORAX_ARGS) \
           --repo /etc/yum.repos.d/fedora.repo \
           --repo /etc/yum.repos.d/fedora-updates.repo \
           --add-template $(_BASE_DIR)/lorax_templates/set_installer.tmpl \
-		  --add-template $(_BASE_DIR)/lorax_templates/configure_upgrades.tmpl \
+		      --add-template $(_BASE_DIR)/lorax_templates/configure_upgrades.tmpl \
           $(_BASE_DIR)/results/
 	mv $(_BASE_DIR)/results/images/boot.iso $(_BASE_DIR)/
 
 # Step 3: Download container image
 container/$(IMAGE_NAME)-$(IMAGE_TAG):
-	mkdir container || true
+	mkdir -p container
 	podman pull $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
 	podman save --format oci-dir -o $(_BASE_DIR)/container/$(IMAGE_NAME)-$(IMAGE_TAG) $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
 	podman rmi $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
@@ -82,18 +80,17 @@ xorriso/%.sh: xorriso/%.sh.in
 xorriso/input.txt: xorriso/gen_input.sh
 	bash $(_BASE_DIR)/xorriso/gen_input.sh | tee $(_BASE_DIR)/xorriso/input.txt
 
-
 clean:
-	rm -Rf $(_BASE_DIR)/container || true
-	rm -Rf $(_BASE_DIR)/debugdata || true
-	rm -Rf $(_BASE_DIR)/pkglists || true
-	rm -Rf $(_BASE_DIR)/results || true
-	rm -f $(_BASE_DIR)/lorax_templates/*.tmpl || true
-	rm -f $(_BASE_DIR)/xorriso/input.txt || true
-	rm -f $(_BASE_DIR)/xorriso/*.sh || true
-	rm -f $(_BASE_DIR)/{original,final}-pkgsizes.txt || true
-	rm -f $(_BASE_DIR)/lorax.conf || true
-	rm -f $(_BASE_DIR)/*.iso || true
-	rm -f $(_BASE_DIR)/*.log || true
+	rm -rf $(_BASE_DIR)/container
+	rm -rf $(_BASE_DIR)/debugdata
+	rm -rf $(_BASE_DIR)/pkglists
+	rm -rf $(_BASE_DIR)/results
+	rm -f $(_BASE_DIR)/lorax_templates/*.tmpl
+	rm -f $(_BASE_DIR)/xorriso/input.txt
+	rm -f $(_BASE_DIR)/xorriso/*.sh
+	rm -f $(_BASE_DIR)/{original,final}-pkgsizes.txt
+	rm -f $(_BASE_DIR)/lorax.conf
+	rm -f $(_BASE_DIR)/*.iso
+	rm -f $(_BASE_DIR)/*.log
 
 .PHONY: clean
