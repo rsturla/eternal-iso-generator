@@ -41,5 +41,6 @@ runs:
       run: |
         docker run --rm --privileged \
           --volume .:/isogenerator/output \
+          -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
           isogenerator:local \
           bash -c 'make container/${IMAGE_NAME}-${IMAGE_TAG} IMAGE_NAME=${IMAGE_NAME} IMAGE_REPO=${IMAGE_REPO} IMAGE_TAG=${IMAGE_TAG}'
