@@ -24,7 +24,12 @@ inputs:
 runs:
   using: composite
   env:
-    MAKEFILE_ARGS: ARCH=${{ inputs.arch }} VERSION=${{ inputs.version }} IMAGE_NAME=${{ inputs.image-name }} IMAGE_REPO=${{ inputs.image-repo }} IMAGE_TAG=${{ inputs.image-tag }} USE_WEB_INSTALLER=${{ inputs.use-web-installer }}
+    IMAGE_NAME: ${{ inputs.image-name }}
+    IMAGE_REPO: ${{ inputs.image-repo }}
+    IMAGE_TAG: ${{ inputs.image-tag }}
+    ARCH: ${{ inputs.arch }}
+    VERSION: ${{ inputs.version }}
+    USE_WEB_INSTALLER: ${{ inputs.use-web-installer }}
   steps:
     - name: Build image
       shell: bash
@@ -38,7 +43,13 @@ runs:
           --volume .:/isogenerator/output \
           -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
           isogenerator:local \
-          bash -c 'make container/${IMAGE_NAME}-${IMAGE_TAG} ${MAKEFILE_ARGS}'
+          bash -c 'make container/${IMAGE_NAME}-${IMAGE_TAG} \
+            ARCH=${ARCH} \
+            VERSION=${VERSION} \
+            IMAGE_NAME=${IMAGE_NAME} \
+            IMAGE_REPO=${IMAGE_REPO} \
+            IMAGE_TAG=${IMAGE_TAG} \
+            USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
 
     - name: Create boot.iso
       shell: bash
@@ -48,7 +59,13 @@ runs:
           --volume .:/isogenerator/output \
           -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
           isogenerator:local \
-          bash -c 'make boot.iso ${MAKEFILE_ARGS}'
+          bash -c 'make boot.iso \
+            ARCH=${ARCH} \
+            VERSION=${VERSION} \
+            IMAGE_NAME=${IMAGE_NAME} \
+            IMAGE_REPO=${IMAGE_REPO} \
+            IMAGE_TAG=${IMAGE_TAG} \
+            USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
 
     - name: Create deploy.iso
       shell: bash
@@ -58,7 +75,13 @@ runs:
           --volume .:/isogenerator/output \
           -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
           isogenerator:local \
-          bash -c 'make ${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}-${VERSION}.iso ${MAKEFILE_ARGS}'
+          bash -c 'make ${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}-${VERSION}.iso \
+            ARCH=${ARCH} \
+            VERSION=${VERSION} \
+            IMAGE_NAME=${IMAGE_NAME} \
+            IMAGE_REPO=${IMAGE_REPO} \
+            IMAGE_TAG=${IMAGE_TAG} \
+            USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
         mkdir output
         mv ${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}-${VERSION}.iso output/
 
