@@ -59,10 +59,9 @@ boot.iso: lorax_templates/set_installer.tmpl lorax_templates/configure_upgrades.
 # Step 3: Download container image
 container/$(IMAGE_NAME)-$(IMAGE_TAG):
 	mkdir container || true
-	podman build --squash-all -t $(IMAGE_REPO)/$(IMAGE_NAME)-squashed:$(IMAGE_TAG) -f - . <<< $$(echo "FROM $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)")
+	podman pull $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
+	podman save --format oci-dir -o $(_BASE_DIR)/container/$(IMAGE_NAME)-$(IMAGE_TAG) $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
 	podman rmi $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
-	podman save --format oci-dir -o $(_BASE_DIR)/container/$(IMAGE_NAME)-$(IMAGE_TAG) $(IMAGE_REPO)/$(IMAGE_NAME)-squashed:$(IMAGE_TAG)
-	podman rmi $(IMAGE_REPO)/$(IMAGE_NAME)-squashed:$(IMAGE_TAG)
 
 
 # Step 4: Generate xorriso script

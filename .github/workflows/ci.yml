@@ -13,7 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         installer: [web, legacy]
-        installer-version: [39]
     env:
       FEDORA_VERSION: 39
     steps:
@@ -27,7 +26,7 @@ jobs:
           image-repo: ghcr.io/rsturla/eternal-linux
           image-tag: ${{ env.FEDORA_VERSION }}
           use-web-installer: ${{ matrix.installer == 'web' && 'true' || 'false' }}
-          version: ${{ matrix.installer-version }}
+          version: ${{ env.FEDORA_VERSION }}
           arch: x86_64
 
       - name: Upload ISO
