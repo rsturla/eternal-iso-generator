@@ -32,52 +32,7 @@ runs:
       run: |
         docker build -t isogenerator:local -f Dockerfile .
 
-    - name: Download image
-      shell: bash
-      env:
-        IMAGE_NAME: ${{ inputs.image-name }}
-        IMAGE_REPO: ${{ inputs.image-repo }}
-        IMAGE_TAG: ${{ inputs.image-tag }}
-        ARCH: ${{ inputs.arch }}
-        VERSION: ${{ inputs.version }}
-        USE_WEB_INSTALLER: ${{ inputs.use-web-installer }}
-      run: |
-        mkdir -p build
-        docker run --rm --privileged \
-          --volume ./build:/isogenerator \
-          -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
-          isogenerator:local \
-          bash -c 'make container/${IMAGE_NAME}-${IMAGE_TAG} \
-            ARCH=${ARCH} \
-            VERSION=${VERSION} \
-            IMAGE_NAME=${IMAGE_NAME} \
-            IMAGE_REPO=${IMAGE_REPO} \
-            IMAGE_TAG=${IMAGE_TAG} \
-            USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
-
-    - name: Create boot ISO
-      shell: bash
-      env:
-        IMAGE_NAME: ${{ inputs.image-name }}
-        IMAGE_REPO: ${{ inputs.image-repo }}
-        IMAGE_TAG: ${{ inputs.image-tag }}
-        ARCH: ${{ inputs.arch }}
-        VERSION: ${{ inputs.version }}
-        USE_WEB_INSTALLER: ${{ inputs.use-web-installer }}
-      run: |
-        docker run --rm --privileged \
-          --volume ./build:/isogenerator \
-          -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
-          isogenerator:local \
-          bash -c 'make boot.iso \
-            ARCH=${ARCH} \
-            VERSION=${VERSION} \
-            IMAGE_NAME=${IMAGE_NAME} \
-            IMAGE_REPO=${IMAGE_REPO} \
-            IMAGE_TAG=${IMAGE_TAG} \
-            USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
-
-    - name: Create final ISO
+    - name: Create ISO
       shell: bash
       env:
         IMAGE_NAME: ${{ inputs.image-name }}
@@ -90,7 +45,6 @@ runs:
         mkdir -p output
         docker run --rm --privileged \
           --volume ./output:/isogenerator/output \
-          --volume ./build:/isogenerator \
           -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
           isogenerator:local \
           bash -c 'make output/${IMAGE_NAME}-${IMAGE_TAG}.iso \
