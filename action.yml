@@ -30,7 +30,7 @@ runs:
     - name: Build image
       shell: bash
       run: |
-        docker build -t isogenerator:local -f Dockerfile .
+        docker build -t isogenerator:local -f ${{ github.action_path }}/Dockerfile ${{ github.action_path }}
 
     - name: Create ISO
       shell: bash

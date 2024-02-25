@@ -1,8 +1,8 @@
 # Configuration vars
 ARCH := x86_64
-IMAGE_REPO := ""
-IMAGE_NAME := ""
-IMAGE_TAG := ""
+IMAGE_REPO := ghcr.io/rsturla/eternal-linux
+IMAGE_NAME := lumina
+IMAGE_TAG := latest
 VARIANT := desktop
 USE_WEB_INSTALLER := false
 
