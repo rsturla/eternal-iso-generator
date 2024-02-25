@@ -93,7 +93,7 @@ runs:
           --volume ./build:/isogenerator \
           -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
           isogenerator:local \
-          bash -c 'make ${IMAGE_NAME}-${IMAGE_TAG}.iso \
+          bash -c 'make output/${IMAGE_NAME}-${IMAGE_TAG}.iso \
             ARCH=${ARCH} \
             VERSION=${VERSION} \
             IMAGE_NAME=${IMAGE_NAME} \

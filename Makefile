@@ -87,11 +87,6 @@ output/$(IMAGE_NAME)-$(IMAGE_TAG).iso: boot.iso container/$(IMAGE_NAME)-$(IMAGE_
 	xorriso -dialog on < $(_BASE_DIR)/xorriso/input.txt
 
 
-# Step 7: Move end ISO to root
-$(IMAGE_NAME)-$(IMAGE_TAG).iso: output/$(IMAGE_NAME)-$(IMAGE_TAG).iso
-	mv output/$(IMAGE_NAME)-$(IMAGE_TAG).iso $(IMAGE_NAME)-$(IMAGE_TAG).iso
-
-
 clean:
 	rm -Rf $(_BASE_DIR)/container || true
 	rm -Rf $(_BASE_DIR)/debugdata || true
