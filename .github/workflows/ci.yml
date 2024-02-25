@@ -1,0 +1,37 @@
+name: ISO Generator CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        installer: [web, legacy]
+    env:
+      FEDORA_VERSION: 39
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Action
+        uses: ./
+        with:
+          image-name: lumina
+          image-repo: ghcr.io/rsturla/eternal-linux
+          image-tag: ${{ env.FEDORA_VERSION }}
+          use-web-installer: ${{ matrix.installer == 'web' && 'true' || 'false' }}
+          version: ${{ env.FEDORA_VERSION }}
+          arch: x86_64
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumina-${{ env.FEDORA_VERSION }}-x86_64-${{ matrix.installer }}-iso
+          path: output/*.iso
+          retention-days: 5
