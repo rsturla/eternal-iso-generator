@@ -1,0 +1,56 @@
+name: Generate ISO
+description: Creates an ISO for installing an OSTree container to a system
+
+inputs:
+  arch:
+    description: Architecture for image to build
+    default: x86_64
+  image-name:
+    description: Name of the source container image
+    required: true
+  version:
+    description: Fedora version of installer to build
+    required: true
+  image-repo:
+    description: Repository of the source container image
+    required: true
+  image-tag:
+    description: Tag of the source container image
+    required: true
+  use-web-installer:
+    description: Enable Anaconda web installer
+    default: false
+
+runs:
+  using: composite
+  steps:
+    - name: Optimize GHA Storage
+      uses: rsturla/eternal-main/.github/actions/optimise-gha-storage@main
+
+    - name: Build image
+      shell: bash
+      run: |
+        docker build -t isogenerator:local -f Dockerfile .
+
+    - name: Download image
+      shell: bash
+      env:
+        IMAGE_NAME: ${{ inputs.image-name }}
+        IMAGE_REPO: ${{ inputs.image-repo }}
+        IMAGE_TAG: ${{ inputs.image-tag }}
+        ARCH: ${{ inputs.arch }}
+        VERSION: ${{ inputs.version }}
+        USE_WEB_INSTALLER: ${{ inputs.use-web-installer }}
+      run: |
+        mkdir -p output
+        docker run --rm --privileged \
+          --volume ./output:/isogenerator/output \
+          -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
+          isogenerator:local \
+          bash -c 'make ${IMAGE_NAME}-${IMAGE_TAG}.iso \
+            ARCH=${ARCH} \
+            VERSION=${VERSION} \
+            IMAGE_NAME=${IMAGE_NAME} \
+            IMAGE_REPO=${IMAGE_REPO} \
+            IMAGE_TAG=${IMAGE_TAG} \
+            USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
