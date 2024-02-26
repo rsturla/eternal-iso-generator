@@ -64,8 +64,8 @@ runs:
             IMAGE_TAG=${IMAGE_TAG} \
             USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
           mv output/${IMAGE_NAME}-${IMAGE_TAG}.iso output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso
-          echo "OUTPUT_PATH=$(dirname ./output)" > $GITHUB_OUTPUT
-          echo "ISO_PATH=$(dirname ./output)/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso"
+          echo "OUTPUT_PATH=$(realpath ./output)" > $GITHUB_OUTPUT
+          echo "ISO_PATH=$(realpath ./output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso)"
 
     - name: Create checksums
       shell: bash
@@ -77,4 +77,4 @@ runs:
         ARCH: ${{ inputs.arch }}
       run: |
         sha256sum ./output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso > ./output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}-checksum
-        echo "CHECKSUM_PATH=$(dirname ./output)/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}-checksum"
+        echo "CHECKSUM_PATH=$(realpath ./output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}-checksum)"
