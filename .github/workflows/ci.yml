@@ -35,6 +35,6 @@ jobs:
         with:
           name: lumina-${{ env.FEDORA_VERSION }}-x86_64-${{ matrix.installer }}-iso
           path: |
-            ${{ steps.run.outputs.output-path }}/*.iso
-            ${{ steps.run.outputs.output-path }}/*-checksum.iso
+            ${{ steps.run.outputs.iso-path }}
+            ${{ steps.run.outputs.checksum-path }}
           retention-days: 5
