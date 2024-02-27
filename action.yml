@@ -23,11 +23,11 @@ inputs:
 
 outputs:
   output-path:
-    value: ${{ steps.generate.outputs.OUTPUT_PATH }}
+    value: ${{ steps.create.outputs.OUTPUT_PATH }}
   iso-path: 
-    value: ${{ steps.generate.outputs.ISO_PATH }}
+    value: ${{ steps.create.outputs.ISO_PATH }}
   checksum-path: 
-    value: ${{ steps.generate.outputs.CHECKSUM_PATH }}  
+    value: ${{ steps.checksum.outputs.CHECKSUM_PATH }}  
 
 runs:
   using: composite
