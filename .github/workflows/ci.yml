@@ -21,6 +21,7 @@ jobs:
 
       - name: Run Action
         uses: ./
+        id: run
         with:
           image-name: lumina
           image-repo: ghcr.io/rsturla/eternal-linux
@@ -33,5 +34,7 @@ jobs:
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
           name: lumina-${{ env.FEDORA_VERSION }}-x86_64-${{ matrix.installer }}-iso
-          path: output/*.iso
+          path: |
+            ${{ steps.run.outputs.iso-path }}
+            ${{ steps.run.outputs.checksum-path }}
           retention-days: 5
