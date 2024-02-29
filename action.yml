@@ -8,9 +8,6 @@ inputs:
   image-name:
     description: Name of the source container image
     required: true
-  version:
-    description: Fedora version of installer to build
-    required: true
   image-repo:
     description: Repository of the source container image
     required: true
@@ -48,17 +45,15 @@ runs:
         IMAGE_REPO: ${{ inputs.image-repo }}
         IMAGE_TAG: ${{ inputs.image-tag }}
         ARCH: ${{ inputs.arch }}
-        VERSION: ${{ inputs.version }}
         USE_WEB_INSTALLER: ${{ inputs.use-web-installer }}
       run: |
         mkdir -p output
         docker run --rm --privileged \
           --volume ./output:/isogenerator/output \
-          -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e VERSION -e USE_WEB_INSTALLER \
+          -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e USE_WEB_INSTALLER \
           isogenerator:local \
           bash -c 'make output/${IMAGE_NAME}-${IMAGE_TAG}.iso \
             ARCH=${ARCH} \
-            VERSION=${VERSION} \
             IMAGE_NAME=${IMAGE_NAME} \
             IMAGE_REPO=${IMAGE_REPO} \
             IMAGE_TAG=${IMAGE_TAG} \

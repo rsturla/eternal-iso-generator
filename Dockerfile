@@ -1,5 +1,4 @@
-ARG VERSION=39
-FROM fedora:${VERSION}
+FROM fedora:39
 
 WORKDIR /isogenerator
 
