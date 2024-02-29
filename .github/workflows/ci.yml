@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         installer: [web, legacy]
-        boot: [secureboot, ]
+        boot: [secureboot, insecure]
     env:
       FEDORA_VERSION: 39
     steps:
