@@ -31,7 +31,7 @@ jobs:
           use-web-installer: ${{ matrix.installer == 'web' && 'true' || 'false' }}
           version: ${{ env.FEDORA_VERSION }}
           arch: x86_64
-          secureboot-key-url: ${{ matrix.boot == 'secureboot' && ${{ env.SECUREBOOT_KEY_URL }} }}
+          secureboot-key-url: ${{ matrix.boot == 'secureboot' && format('{0}', env.SECUREBOOT_KEY_URL) }}
           secureboot-password: ${{ matrix.boot == 'secureboot' && 'eternal' }}
 
       - name: Upload ISO
