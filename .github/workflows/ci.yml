@@ -16,7 +16,7 @@ jobs:
         boot: [secureboot, insecure]
     env:
       FEDORA_VERSION: 39
-      SECUREBOOT_KEY_URL: 'https://raw.githubusercontent.com/rsturla/eternal-main/main/files/usr/etc/pki/containers/eternal-linux.pub'
+      SECUREBOOT_KEY_URL: 'https://github.com/rsturla/akmods/raw/main/_certs/public_key.der'
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
