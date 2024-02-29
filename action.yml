@@ -20,6 +20,12 @@ inputs:
   use-web-installer:
     description: Enable Anaconda web installer
     default: false
+  secureboot-key-url:
+    description: URL pointing to the SecureBoot public key
+    required: false
+  secureboot-password:
+    description: The password to enroll SecureBoot keys on machines
+    required: false
 
 outputs:
   output-path:
@@ -50,6 +56,8 @@ runs:
         ARCH: ${{ inputs.arch }}
         VERSION: ${{ inputs.version }}
         USE_WEB_INSTALLER: ${{ inputs.use-web-installer }}
+        SECUREBOOT_URL: ${{ inputs.secureboot-key-url }}
+        SECUREBOOT_PASSWORD: ${{ inputs.secureboot-password }}
       run: |
         mkdir -p output
         docker run --rm --privileged \
