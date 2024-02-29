@@ -7,6 +7,7 @@ RUN dnf install -y make lorax xorriso podman && \
   dnf clean all
 
 COPY ./lorax_templates /isogenerator/lorax_templates
+COPY ./scripts /isogenerator/scripts
 COPY ./xorriso /isogenerator/xorriso
 COPY ./Makefile /isogenerator/
 
