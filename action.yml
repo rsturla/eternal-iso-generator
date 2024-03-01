@@ -8,9 +8,6 @@ inputs:
   image-name:
     description: Name of the source container image
     required: true
-  version:
-    description: Fedora version of installer to build
-    required: true
   image-repo:
     description: Repository of the source container image
     required: true
