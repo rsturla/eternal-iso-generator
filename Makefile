@@ -3,6 +3,7 @@ ARCH := x86_64
 IMAGE_REPO := ghcr.io/rsturla/eternal-linux
 IMAGE_NAME := lumina
 IMAGE_TAG := latest
+FEDORA_VERSION := $(IMAGE_TAG)
 VARIANT := desktop
 USE_WEB_INSTALLER := false
 SECUREBOOT_KEY_URL := 
@@ -53,7 +54,7 @@ boot.iso: lorax_templates/set_installer.tmpl lorax_templates/configure_upgrades.
 	sed -i 's/set default="1"/set default="0"/' /usr/share/lorax/templates.d/99-generic/config_files/x86/grub2-bios.cfg
 	sed -i 's/set default="1"/set default="0"/' /usr/share/lorax/templates.d/99-generic/config_files/x86/grub2-efi.cfg
 
-	lorax -p $(IMAGE_NAME) -v $(IMAGE_TAG) -r $(IMAGE_TAG) -t $(VARIANT) \
+	lorax -p $(IMAGE_NAME) -v $(FEDORA_VERSION) -r $(IMAGE_TAG) -t $(VARIANT) \
           --isfinal --buildarch=$(ARCH) --volid=$(_VOLID) \
           $(_LORAX_ARGS) \
           --repo /etc/yum.repos.d/fedora.repo \

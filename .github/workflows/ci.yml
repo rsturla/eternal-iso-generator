@@ -14,7 +14,10 @@ jobs:
       matrix:
         installer: [web, legacy]
         boot: [secureboot, insecure]
-        image-tag: [39, 39-nvidia]
+        fedora-version: [39]
+        include:
+          - fedora-version: 39
+            image-tag: [39, 39-nvidia]
     env:
       SECUREBOOT_KEY_URL: 'https://github.com/rsturla/akmods/raw/main/_certs/public_key.der'
     steps:
@@ -30,6 +33,7 @@ jobs:
           image-tag: ${{ matrix.image-tag }}
           use-web-installer: ${{ matrix.installer == 'web' && 'true' || 'false' }}
           arch: x86_64
+          fedora-version: ${{ matrix.fedora-version }}
           secureboot-key-url: ${{ matrix.boot == 'secureboot' && format('{0}', env.SECUREBOOT_KEY_URL) }}
           secureboot-password: ${{ matrix.boot == 'secureboot' && 'eternal' }}
 
