@@ -13,7 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         installer: [web, legacy]
+        boot: [secureboot, insecure]
+        image-tag: [39, 39-nvidia]
     env:
+      SECUREBOOT_KEY_URL: 'https://github.com/rsturla/akmods/raw/main/_certs/public_key.der'
       FEDORA_VERSION: 39
     steps:
       - name: Checkout
@@ -25,15 +28,17 @@ jobs:
         with:
           image-name: lumina
           image-repo: ghcr.io/rsturla/eternal-linux
-          image-tag: ${{ env.FEDORA_VERSION }}
+          image-tag: ${{ matrix.image-tag }}
           use-web-installer: ${{ matrix.installer == 'web' && 'true' || 'false' }}
-          version: ${{ env.FEDORA_VERSION }}
           arch: x86_64
+          fedora-version: ${{ env.FEDORA_VERSION }}
+          secureboot-key-url: ${{ matrix.boot == 'secureboot' && format('{0}', env.SECUREBOOT_KEY_URL) || '' }}
+          secureboot-password: ${{ matrix.boot == 'secureboot' && 'eternal' || '' }}
 
       - name: Upload ISO
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
-          name: lumina-${{ env.FEDORA_VERSION }}-x86_64-${{ matrix.installer }}-iso
+          name: lumina-${{ matrix.image-tag }}-x86_64-${{ matrix.installer }}${{ matrix.boot == 'secureboot' && '-secureboot' || '' }}-iso
           path: |
             ${{ steps.run.outputs.iso-path }}
             ${{ steps.run.outputs.checksum-path }}

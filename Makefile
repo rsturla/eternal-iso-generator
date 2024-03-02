@@ -3,8 +3,11 @@ ARCH := x86_64
 IMAGE_REPO := ghcr.io/rsturla/eternal-linux
 IMAGE_NAME := lumina
 IMAGE_TAG := latest
+FEDORA_VERSION := $(IMAGE_TAG)
 VARIANT := desktop
 USE_WEB_INSTALLER := false
+SECUREBOOT_KEY_URL := 
+SECUREBOOT_PASSWORD := 
 
 # Generated vars
 _BASE_DIR = $(shell pwd)
@@ -40,18 +43,25 @@ lorax_templates/%.tmpl: lorax_templates/%.tmpl.in
 # Step 2: Build boot.iso using Lorax
 boot.iso: lorax_templates/set_installer.tmpl lorax_templates/configure_upgrades.tmpl
 	rm -Rf $(_BASE_DIR)/results
-	sed -i '/menuentry '\''Test this media & install @IMAGE_NAME@ @IMAGE_TAG@'\'' --class fedora --class gnu-linux --class gnu --class os {/,/}/d' /usr/share/lorax/templates.d/99-generic/config_files/x86/grub2-bios.cfg
-	sed -i '/menuentry '\''Test this media & install @IMAGE_NAME@ @IMAGE_TAG@'\'' --class fedora --class gnu-linux --class gnu --class os {/,/}/d' /usr/share/lorax/templates.d/99-generic/config_files/x86/grub2-efi.cfg
+	rm /etc/rpm/macros.image-language-conf || true
+
+	# Download the secureboot key
+	sed 's/@SECUREBOOT_PASSWORD@/$(SECUREBOOT_PASSWORD)/' $(_BASE_DIR)/scripts/enroll-secureboot-key.sh.in > $(_BASE_DIR)/scripts/enroll-secureboot-key.sh
+	if [ -n "$(SECUREBOOT_KEY_URL)" ]; then\
+      curl --fail -L -o $(_BASE_DIR)/sb_pubkey.der $(SECUREBOOT_KEY_URL);\
+	fi
+
 	sed -i 's/set default="1"/set default="0"/' /usr/share/lorax/templates.d/99-generic/config_files/x86/grub2-bios.cfg
 	sed -i 's/set default="1"/set default="0"/' /usr/share/lorax/templates.d/99-generic/config_files/x86/grub2-efi.cfg
 
-	lorax -p $(IMAGE_NAME) -v $(VERSION) -r $(VERSION) -t $(VARIANT) \
+	lorax -p $(IMAGE_NAME) -v $(FEDORA_VERSION) -r $(IMAGE_TAG) -t $(VARIANT) \
           --isfinal --buildarch=$(ARCH) --volid=$(_VOLID) \
           $(_LORAX_ARGS) \
           --repo /etc/yum.repos.d/fedora.repo \
           --repo /etc/yum.repos.d/fedora-updates.repo \
           --add-template $(_BASE_DIR)/lorax_templates/set_installer.tmpl \
           --add-template $(_BASE_DIR)/lorax_templates/configure_upgrades.tmpl \
+		  --add-template $(_BASE_DIR)/lorax_templates/secure_boot_key.tmpl \
           $(_BASE_DIR)/results/
 	mv $(_BASE_DIR)/results/images/boot.iso $(_BASE_DIR)/
 
