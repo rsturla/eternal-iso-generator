@@ -1,0 +1,17 @@
+append usr/share/anaconda/interactive-defaults.ks "%post --erroronfail"
+append usr/share/anaconda/interactive-defaults.ks "sed -i 's/container-image-reference=.*/container-image-reference=ostree-image-signed:docker:\/\/@IMAGE_REPO_ESCAPED@\/${IMAGE_NAME}:@IMAGE_TAG@/' /ostree/deploy/default/deploy/*.origin"
+append usr/share/anaconda/interactive-defaults.ks "%end"
+
+append usr/share/anaconda/post-scripts/configure_upgrades.ks "%post --erroronfail"
+append usr/share/anaconda/post-scripts/configure_upgrades.ks "sed -i 's/container-image-reference=.*/container-image-reference=ostree-image-signed:docker:\/\/@IMAGE_REPO_ESCAPED@\/${IMAGE_NAME}:@IMAGE_TAG@/' /ostree/deploy/default/deploy/*.origin"
+append usr/share/anaconda/post-scripts/configure_upgrades.ks "%end"
+append usr/share/anaconda/interactive-defaults.ks "%post --logfile=/root/ks-post.log --erroronfail --nochroot"
+append usr/share/anaconda/interactive-defaults.ks "set -m"
+append usr/share/anaconda/interactive-defaults.ks "/run/install/repo/enroll-secureboot-key.sh"
+append usr/share/anaconda/interactive-defaults.ks "%end"
+
+append usr/share/anaconda/post-scripts/secure_boot_key.ks "%post --logfile=/root/ks-post.log --erroronfail --nochroot"
+append usr/share/anaconda/post-scripts/secure_boot_key.ks "set -m"
+append usr/share/anaconda/post-scripts/secure_boot_key.ks "/run/install/repo/enroll-secureboot-key.sh"
+append usr/share/anaconda/post-scripts/secure_boot_key.ks "%end"
+append usr/share/anaconda/interactive-defaults.ks "ostreecontainer --url=/run/install/repo/${IMAGE_NAME}-@IMAGE_TAG@ --transport=oci --no-signature-verification"
