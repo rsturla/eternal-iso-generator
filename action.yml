@@ -64,16 +64,16 @@ runs:
           --volume ./output:/isogenerator/output \
           -e IMAGE_NAME -e IMAGE_REPO -e IMAGE_TAG -e ARCH -e FEDORA_VERSION -e USE_WEB_INSTALLER \
           isogenerator:local \
-          bash -c 'make output/${IMAGE_NAME}-${IMAGE_TAG}.iso \
-            ARCH=${ARCH} \
-            FEDORA_VERSION=${FEDORA_VERSION} \
-            IMAGE_NAME=${IMAGE_NAME} \
-            IMAGE_REPO=${IMAGE_REPO} \
-            IMAGE_TAG=${IMAGE_TAG} \
-            USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
-          mv output/${IMAGE_NAME}-${IMAGE_TAG}.iso output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso
-          echo "OUTPUT_PATH=$(realpath ./output)" >> $GITHUB_OUTPUT
-          echo "ISO_PATH=$(realpath ./output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso)" >> $GITHUB_OUTPUT
+          # bash -c 'make output/${IMAGE_NAME}-${IMAGE_TAG}.iso \
+          #   ARCH=${ARCH} \
+          #   FEDORA_VERSION=${FEDORA_VERSION} \
+          #   IMAGE_NAME=${IMAGE_NAME} \
+          #   IMAGE_REPO=${IMAGE_REPO} \
+          #   IMAGE_TAG=${IMAGE_TAG} \
+          #   USE_WEB_INSTALLER=${USE_WEB_INSTALLER}'
+          # mv output/${IMAGE_NAME}-${IMAGE_TAG}.iso output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso
+          # echo "OUTPUT_PATH=$(realpath ./output)" >> $GITHUB_OUTPUT
+          # echo "ISO_PATH=$(realpath ./output/${IMAGE_NAME}-${IMAGE_TAG}-${ARCH}.iso)" >> $GITHUB_OUTPUT
 
     - name: Create checksums
       shell: bash
